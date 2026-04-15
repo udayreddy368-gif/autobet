@@ -1,14 +1,25 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from bs4 import BeautifulSoup  # Import BeautifulSoup
+from bs4 import BeautifulSoup
+from webdriver_manager.chrome import ChromeDriverManager
 import time
 
+# Headless Chrome setup for Codespaces
+chrome_options = Options()
+chrome_options.add_argument("--headless=new")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("--disable-gpu")
+
+service = ChromeService(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service, options=chrome_options)
+
 # Ensure prerequisites are installed
-# pip install selenium beautifulsoup4
+pip install selenium beautifulsoup4
 
 # Path to your chromedriver
 # driver_path = r'C:\Users\USER\Desktop\crpati\chromedriver.exe'  # Update this path
@@ -40,6 +51,13 @@ url = 'https://zuplay.com/'
 
 # Open the URL
 driver.get(url)
+
+# After opening the URL and closing popup, automate login:
+username_field = driver.find_element(By.ID, "username")   # Update selectors
+password_field = driver.find_element(By.ID, "password")
+username_field.send_keys("UdayReddy347")
+password_field.send_keys("Uday@11347")
+driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
 # Handle the popup if it appears
 try:
