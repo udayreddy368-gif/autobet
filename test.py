@@ -5,16 +5,16 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 # --- Proxy configuration (example using a free proxy) ---
 # Replace with a working proxy IP:PORT from a free proxy list
-proxy_ip = "YOUR_PROXY_IP"
-proxy_port = "YOUR_PROXY_PORT"
+proxy_ip = "138.68.60.8"
+proxy_port = "3128"
 
 seleniumwire_options = {
     'proxy': {
-        'http': f'http://{proxy_ip}:{proxy_port}',
-        'https': f'https://{proxy_ip}:{proxy_port}',
-        'no_proxy': 'localhost,127.0.0.1'
-    }
-}
+            'http': f'http://{proxy_ip}:{proxy_port}',
+                    'https': f'https://{proxy_ip}:{proxy_port}',
+                            'no_proxy': 'localhost,127.0.0.1'
+                                }
+                                }
 
 # --- Chrome options (headless + anti-detection) ---
 options = Options()
