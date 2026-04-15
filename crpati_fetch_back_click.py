@@ -19,7 +19,7 @@ service = ChromeService(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
 # Ensure prerequisites are installed
-pip install selenium beautifulsoup4
+# pip install selenium beautifulsoup4
 
 # Path to your chromedriver
 # driver_path = r'C:\Users\USER\Desktop\crpati\chromedriver.exe'  # Update this path
