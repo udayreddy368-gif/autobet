@@ -11,10 +11,23 @@ import time
 # pip install selenium beautifulsoup4
 
 # Path to your chromedriver
-driver_path = r'C:\Users\USER\Desktop\crpati\chromedriver.exe'  # Update this path
-
+# driver_path = r'C:\Users\USER\Desktop\crpati\chromedriver.exe'  # Update this path
 # Create a Service object
-service = Service(driver_path)
+# service = Service(driver_path)
+
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service as ChromeService
+
+chrome_options = Options()
+chrome_options.add_argument("--headless=new")          # Run without GUI
+chrome_options.add_argument("--no-sandbox")            # Required for Codespaces
+chrome_options.add_argument("--disable-dev-shm-usage") # Avoid memory issues
+chrome_options.add_argument("--disable-gpu")           # Disable GPU acceleration
+
+# Automatically download and manage ChromeDriver
+service = ChromeService(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service, options=chrome_options)
 
 # Create ChromeOptions object to configure the browser
 chrome_options = Options()
@@ -23,7 +36,7 @@ chrome_options = Options()
 driver = webdriver.Chrome(service=service, options=chrome_options)
 
 # URL to open
-url = 'https://www.crpati101.com/'
+url = 'https://zuplay.com/'
 
 # Open the URL
 driver.get(url)
