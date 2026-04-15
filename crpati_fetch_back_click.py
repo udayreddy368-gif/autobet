@@ -10,10 +10,13 @@ import time
 
 # Headless Chrome setup for Codespaces
 chrome_options = Options()
-chrome_options.add_argument("--headless=new")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--disable-gpu")
+chrome_options.add_argument("--headless")               # Use standard headless (not --headless=new)
+chrome_options.add_argument("--no-sandbox")             # Required in container
+chrome_options.add_argument("--disable-dev-shm-usage")  # Prevents /dev/shm overflow
+chrome_options.add_argument("--disable-gpu")            # No GPU in Codespaces
+chrome_options.add_argument("--disable-software-rasterizer")
+chrome_options.add_argument("--disable-features=VizDisplayCompositor")
+chrome_options.add_argument("--disable-blink-features=AutomationControlled")
 
 service = ChromeService(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=chrome_options)
