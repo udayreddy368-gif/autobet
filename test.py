@@ -1,41 +1,32 @@
 from seleniumwire import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options   # ← Import was missing
 from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
-# --- 1. Your proxy credentials (from your provider) ---
-proxy_host = "your.proxy.provider.com"
-proxy_port = 8080
-proxy_user = "your_username"
-proxy_pass = "your_password"
+# --- Proxy configuration (example using a free proxy) ---
+# Replace with a working proxy IP:PORT from a free proxy list
+proxy_ip = "YOUR_PROXY_IP"
+proxy_port = "YOUR_PROXY_PORT"
 
-# --- 2. Configure seleniumwire_options ---
 seleniumwire_options = {
     'proxy': {
-        'http': f'http://{proxy_user}:{proxy_pass}@{proxy_host}:{proxy_port}',
-        'https': f'https://{proxy_user}:{proxy_pass}@{proxy_host}:{proxy_port}',
-        'no_proxy': 'localhost,127.0.0.1'  # Don't proxy local traffic
+        'http': f'http://{proxy_ip}:{proxy_port}',
+        'https': f'https://{proxy_ip}:{proxy_port}',
+        'no_proxy': 'localhost,127.0.0.1'
     }
 }
 
-# --- 3. Configure Chrome Options (like before) ---
-chrome_options = {
-    'headless': 'new',
-    'no-sandbox': True,
-    'disable-dev-shm-usage': True,
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
-    'disable-blink-features': 'AutomationControlled',
-    'excludeSwitches': ['enable-automation'],
-    'useAutomationExtension': False
-}
+# --- Chrome options (headless + anti-detection) ---
 options = Options()
-for key, value in chrome_options.items():
-    if isinstance(value, bool):
-        if value:
-            options.add_argument(f'--{key}')
-    else:
-        options.add_argument(f'--{key}={value}')
+options.add_argument("--headless=new")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--disable-blink-features=AutomationControlled")
+options.add_argument("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36")
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option("useAutomationExtension", False)
 
-# --- 4. Launch with selenium-wire ---
+# --- Launch browser ---
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(
     service=service,
@@ -43,6 +34,18 @@ driver = webdriver.Chrome(
     seleniumwire_options=seleniumwire_options
 )
 
+# Hide WebDriver property
+driver.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+    "source": """
+        Object.defineProperty(navigator, 'webdriver', {
+            get: () => undefined
+        });
+    """
+})
+
+# Test the connection
 driver.get("https://zuplay.com/")
-print(f"Page Title: {driver.title}")
+print("Page title:", driver.title)
+print("Current URL:", driver.current_url)
+
 driver.quit()
